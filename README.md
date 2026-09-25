@@ -2,11 +2,15 @@
 
 Architecture spec and interactive prototype for a conversational analytics path:
 
-warehouse → MCP (ACL + cache + artifacts) → chart spec → existing front-end renderer → pin/share.
+warehouse → Cortex (MCP server: ACL + cache + artifacts) → chart spec → existing front-end renderer → pin/share.
+
+Agent harness: **OpenCode**. MCP server: **Cortex**.
 
 ## Files
 
 - `SPEC.md` — components, flow, contracts, open questions
+- `docs/architecture.md` — full layer diagram (OpenCode + Cortex)
+- `docs/harness-selection.md` — why OpenCode over smolagents, Agents SDK, Pi
 - `prototype.html` — interactive demo styled after shadcn/ui dashboard-01: sidebar shell, site header, section cards, area chart, light/dark theme
 - `prototype.py` — same logic as a console script
 
@@ -25,5 +29,5 @@ Download `prototype.html` and open it in a browser.
 
 - Chart component emits a spec, not pixels.
 - Cache key is `fingerprint(sql) + role`, not user name alone.
-- MCP re-checks table ACL on cache hits and on artifact load.
+- Cortex re-checks table ACL on cache hits and on artifact load.
 - Artifact visibility is owner or `shared_with`, plus table ACL.

@@ -1,14 +1,14 @@
-# Architecture: NL-to-Dashboard Agent (OpenCode harness)
+# Architecture: NL-to-Dashboard Agent (OpenCode harness + Cortex MCP)
 
 ## Overview
 
 Conversational analytics path: natural language in, chart widgets out.
 
 ```
-warehouse -> MCP (ACL + cache + artifacts) -> chart spec -> front-end renderer -> pin/share
+warehouse -> Cortex (ACL + cache + artifacts) -> chart spec -> front-end renderer -> pin/share
 ```
 
-The agent never touches the warehouse directly. Every query, cache hit, and permission check flows through the MCP server, so access control lives in one place.
+The agent never touches the warehouse directly. Every query, cache hit, and permission check flows through **Cortex**, the MCP server, so access control lives in one place.
 
 ## Architecture diagram
 
@@ -33,7 +33,7 @@ The agent never touches the warehouse directly. Every query, cache hit, and perm
                               | MCP protocol (tools + resources)
                               v
 +-------------------------------------------------------------+
-|  MCP SERVER — enforcement point                              |
+|  Cortex — MCP server, enforcement point                      |
 |  - warehouse connection                                       |
 |  - table-level + row-level permissions (RLS)                 |
 |  - cache keyed on sql fingerprint + role                     |
@@ -55,12 +55,12 @@ The agent never touches the warehouse directly. Every query, cache hit, and perm
 
 ### Agent layer (OpenCode)
 
-- Runs the tool-calling loop against the MCP server.
+- Runs the tool-calling loop against Cortex.
 - Splits a user request into intents (e.g., yesterday count, 30-day trend, month-to-date).
 - Selects chart type per data shape.
 - Emits a declarative JSON spec — never rendered pixels.
 
-### Data and artifact layer (MCP server)
+### Data and artifact layer (Cortex)
 
 - Single enforcement point for table ACL and row-level security.
 - Cache key: `fingerprint(sql) + role` — not user name alone. Two users asking the same thing can see different rows.
@@ -81,9 +81,9 @@ The agent never touches the warehouse directly. Every query, cache hit, and perm
 
 1. Chart component emits a spec, not pixels.
 2. Cache key is `fingerprint(sql) + role`.
-3. MCP re-checks table ACL on cache hits and artifact loads.
+3. Cortex re-checks table ACL on cache hits and artifact loads.
 4. Artifact visibility is owner or `shared_with`, plus table ACL.
-5. Agent never bypasses MCP — no direct warehouse credentials.
+5. Agent never bypasses Cortex — no direct warehouse credentials.
 
 ## Open questions
 
