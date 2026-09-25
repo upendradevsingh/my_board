@@ -7,18 +7,19 @@ warehouse → MCP (ACL + cache + artifacts) → chart spec → existing front-en
 ## Files
 
 - `SPEC.md` — components, flow, contracts, open questions
-- `prototype.html` — interactive demo (switch user, ask, pin, share, ACL deny)
+- `prototype.html` — interactive demo styled after shadcn/ui dashboard-01: sidebar shell, site header, section cards, area chart, light/dark theme
 - `prototype.py` — same logic as a console script
 
 ## Try the prototype
 
-Open `prototype.html` in a browser (double-click or `python -m http.server` in this folder).
+Download `prototype.html` and open it in a browser.
 
-1. Stay as Alice. Click **All three** then **Ask agent**. You should get a KPI, a line, and a bar. Badges say `fresh` the first time.
-2. Ask the 30-day trend again — badge should flip to `cached`.
-3. **Pin** the trend widget, then **Share with Bob**.
-4. Switch acting user to Bob → pinned artifact is loadable. Ask the same question → cache hit.
-5. Switch to Carol → ask anything about meetings → permission denied. Shared artifact stays hidden.
+1. Stay as Alice. Click **All three** then **Run**. You get KPI cards plus a trend area chart. First pass is `fresh`.
+2. Run the 30-day trend again — badge flips to `cached`.
+3. **Pin to dashboard**, then **Share with Bob**.
+4. Switch user to Bob → artifact is loadable. Same question is a cache hit.
+5. Switch to Carol → meetings queries and the shared widget are denied.
+6. Use the sun icon in the header to toggle dark mode.
 
 ## Design rules this demo encodes
 
